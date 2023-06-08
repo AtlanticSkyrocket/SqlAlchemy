@@ -1,0 +1,30 @@
+#image {
+  max-width: 100%;
+}
+
+.col-1-5 {
+  flex: 0 0 12.3%;
+  max-width: 12.3%;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.col-2-5 {
+  flex: 0 0 20.8%;
+  max-width: 20.8%;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.col-3-5 {
+  flex: 0 0 29.2%;
+  max-width: 29.2%;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
