@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Post
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2>{{post.title}}</h2>
+  <p>{{post.content}}</p>
+  <div class="col-6">
+    {% if post.tags %}
+    <div class="row">
+      <p class="my-1">
+        <b>Tags:</b>
+        {% for tag in post.tags %}
+        <a class="btn btn-primary rounded border btn-sm" href="/tags/{{ tag.id }}"><b>{{ tag.name }}</b></a>
+        {% endfor %}
+      </p>
+    </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        No tags.
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-1 m-1 p-0">
+      <a href="/posts/{{ post.id }}/edit" class="btn btn-primary">Edit</a>
+    </div>
+    <div class="col-2 my-1 p-0">
+      <form action="/posts/{{ post.id }}/delete" method="POST">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

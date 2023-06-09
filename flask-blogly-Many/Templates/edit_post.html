@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Edit post{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h2>Edit Post</h2>
+  <div class="col-6">
+    <form action="/posts/{{post.id}}/edit" method="POST">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" name="title" required="true" value="{{ post.title }}">
+      <label for="content">Content</label>
+      <textarea class="form-control" id="content" name="content" rows="5" required="true" >{{post.content}}</textarea>
+      <label for="tags">Tags</label>
+      {% for tag in tags %}
+        {% if tag in post.tags %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="tag{{tag.id}}" value="{{tag.id}}" name="tags" checked>
+          <label class="form-check-label" for="tagtag{{tag.id}}">{{tag.name}}</label>
+        </div>
+        {% else %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="tag{{tag.id}}" value="{{tag.id}}" name="tags">
+          <label class="form-check-label" for="tagtag{{tag.id}}">{{tag.name}}</label>
+        </div>
+        {% endif %}
+      {% endfor %}
+      <a href="{{ request.referrer }}" class="btn btn-secondary mt-3">Cancel</a>
+      <button type="submit" class="btn btn-primary mt-3">Edit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

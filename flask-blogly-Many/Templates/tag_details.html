@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Tag
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2>{{tag.name}}</h2>
+  <div class="col-6">
+    {% if posts %}
+    <ul class="list">
+        {% for post in posts %}
+        <li><a class="list-item" href="/posts/{{ post.id }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        No posts exist.
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-1 my-1 p-0">
+      <a href="/tags/{{ tag.id }}/edit" class="btn btn-primary">Edit</a>
+    </div>
+    <div class="col-2 my-1 p-0">
+      <form action="/tags/{{ tag.id }}/delete" method="POST">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

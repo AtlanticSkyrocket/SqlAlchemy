@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Edit tag{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h2>Edit a tag</h2>
+  <div class="col-6">
+    <form action="/tags/{{ tag.id }}/edit" method="POST">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{tag.name}}" placeholder="Fun">
+      <a href="{{ request.referrer }}" class="btn btn-secondary mt-3">Cancel</a>
+      <button type="submit" class="btn btn-primary mt-3">Edit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

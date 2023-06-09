@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Tags
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h2>Posts</h2>
+  <div class="col-6">
+    {% if posts %}
+    <ul class="list">
+        {% for post in posts %}
+        <li>
+          <p> {{ post.title }} </p>
+          <p> {{ post.content }} </p>
+          <span>
+            <i>By {{ post.user.first_name ~ ' ' ~ post.user.last_name }} on {{Post.get_formatted_date(post)}}</i>
+          </span>
+          {% if post.tags %}
+          <div class="row">
+            <p class="my-1">
+              <b>Tags:</b>
+              {% for tag in post.tags %}
+              <a class="btn btn-primary rounded border btn-sm" href="/tags/{{ tag.id }}"><b>{{ tag.name }}</b></a>
+              {% endfor %}
+            </p>
+          </div>
+          {% else %}
+          <div class="row">
+            <p class="my-1">
+              <b>Tags:</b>
+              <span class="alert alert-notification" role="alert">
+                No tags.
+              </span>
+            </p>
+          </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-1 m-1 p-0">
+              <a href="/posts/{{post.id}}" class="btn btn-primary">View</a>
+            </div>
+            <div class="col-1 m-1 p-0">
+              <a href="/posts/{{ post.id }}/edit" class="btn btn-primary">Edit</a>
+            </div>
+            <div class="col-2 my-1 p-0">
+              <form action="/posts/{{ post.id }}/delete" method="POST">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        No posts exist.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

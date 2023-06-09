@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Tags
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h2>Tags</h2>
+  <div class="col-6">
+    {% if tags %}
+    <ul class="list">
+        {% for tag in tags %}
+        <li><a class="list-item" href="/tags/{{ tag.id }}">{{ tag.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        No tags exist.
+    </div>
+    {% endif %}
+    <a href="/tags/new" class="btn btn-primary mt-3">Add tag</a>
+  </div>
+</div>
+{% endblock %}
