@@ -16,7 +16,7 @@ Tags
           <p> {{ post.title }} </p>
           <p> {{ post.content }} </p>
           <span>
-            <i>By {{ post.user.first_name ~ ' ' ~ post.user.last_name }} on {{Post.get_formatted_date(post)}}</i>
+            <i>By <a href="/users/{{ post.user.id }}">{{ post.user.full_name }}</a> on {{ post.formatted_date }}</i>
           </span>
           {% if post.tags %}
           <div class="row">

@@ -34,9 +34,21 @@ class User(db.Model):
   
   
   
-  @classmethod
-  def get_full_name(self, user):
-    return f'{user.first_name} {user.last_name}'
+  @property
+  def full_name(self):
+    return f'{self.first_name} {self.last_name}'
+  
+  def delete_user(self):
+    deleted_user = User.query.filter_by(first_name='User', last_name='Deleted').first()
+  
+    for post in self.posts:
+        post.user_id = deleted_user.id
+        db.session.add(post)
+    
+    db.session.commit()
+    
+    db.session.delete(self)
+    db.session.commit()
   
 class Post(db.Model):
   __tablename__ = 'posts'
@@ -61,11 +73,12 @@ class Post(db.Model):
                       db.ForeignKey('users.id'),
                       nullable=False)
   
-  user = db.relationship('User', backref='posts') 
+  user = db.relationship('User', backref='posts')
   
-  @classmethod
-  def get_formatted_date(self, post):
-    return post.created_at.strftime('%a %b %d %Y, %I:%M %p')
+  @property
+  def formatted_date(self):
+    return self.created_at.strftime("%b %d %Y %H:%M %p")
+  
   
 class PostTag(db.Model):
   __tablename__ = 'post_tags'
@@ -82,8 +95,8 @@ class PostTag(db.Model):
                   db.ForeignKey('tags.id'),
                   primary_key=True)
 
-  post = db.relationship('Post', backref='post_tags')
-  tag = db.relationship('Tag', backref='post_tags')
+  post = db.relationship('Post', backref=db.backref('post_tags', cascade='all, delete-orphan'), overlaps="post,post_tags")
+  tag = db.relationship('Tag', backref=db.backref('post_tags', cascade='all, delete-orphan'), overlaps="tag,post_tags")
   
 class Tag(db.Model):
   __tablename__ = 'tags'

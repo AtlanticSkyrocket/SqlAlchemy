@@ -1,8 +1,7 @@
 """Blogly application."""
-
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post, Tag, PostTag
+from models import db, connect_db, User, Post, Tag
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -20,7 +19,7 @@ def home():
 @app.route('/users')
 def list_users():
     """List users and show add form."""
-    users = db.session.query(User).all()
+    users = db.session.query(User).filter(User.first_name != 'User', User.last_name != 'Deleted').order_by(User.first_name.asc()).all()
     return render_template('users.html', users=list(users))
   
 @app.route('/users/new', methods=['GET', 'POST'])
@@ -45,7 +44,6 @@ def show_add_user_form():
 def show_user(user_id):
     """Show user profile."""
     user = User.query.get_or_404(user_id)
-    user.full_name = user.get_full_name(user)
     return render_template('user_details.html', user=user)
   
 @app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
@@ -53,7 +51,6 @@ def show_edit_user_form(user_id):
     """Show edit form."""
     user = User.query.get_or_404(user_id)
     if request.method == 'GET':
-      user.full_name = user.get_full_name(user)
       return render_template('edit_user.html', user=user)
     else:
       first_name = request.form.get('first-name')
@@ -74,9 +71,7 @@ def show_edit_user_form(user_id):
 def delete_user(user_id):
     """Delete user and redirect to user list."""
     user = User.query.get_or_404(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    #db.session.expunge(user)
+    user.delete_user()
     return redirect('/users')
   
   
@@ -87,7 +82,7 @@ Tags  """
 @app.route('/tags')
 def list_tags():
     """List users and show add form."""
-    tags = db.session.query(Tag).all()
+    tags = db.session.query(Tag).order_by(Tag.name.asc()).all()
     return render_template('tags.html', tags=list(tags))
   
 @app.route('/tags/new', methods=['GET', 'POST'])
@@ -124,6 +119,7 @@ def show_edit_tag_form(tag_id):
 
       if name:
         tag.name=name
+        db.session.add(tag)
         db.session.commit()
         return redirect('/tags')
       else:
@@ -145,7 +141,7 @@ def delete_tag(tag_id):
 @app.route('/posts')
 def list_posts():
     """List posts and shows add form."""
-    posts = db.session.query(Post).all()
+    posts = db.session.query(Post).order_by(Post.created_at.desc()).all()
     return render_template('posts.html', posts=list(posts), Post=Post)
   
 @app.route('/posts/new', methods=['GET', 'POST'])
@@ -154,7 +150,6 @@ def show_add_post_form():
     user_id = request.args.get('id') 
     if request.method == 'GET':
       user = User.query.get_or_404(user_id)
-      user.full_name = user.get_full_name(user)
       return render_template('add_post.html', user=user, tags=list(Tag.query.all()))
     else:
       title = request.form.get('title')
@@ -182,7 +177,6 @@ def show_edit_post_form(post_id):
     post = Post.query.get_or_404(post_id)
     user = post.user 
     if request.method == 'GET':
-      user.full_name = User.get_full_name(post.user)
       tags = list(Tag.query.all())
       return render_template('edit_post.html', post=post, tags=tags, user=user)
     else:
@@ -194,6 +188,7 @@ def show_edit_post_form(post_id):
         post.title = title if title else post.title
         post.content = content if content else post.content
         post.tags = tags if tags else post.tags
+        db.session.add(post)
         db.session.commit()
         return redirect('/posts')
       else:

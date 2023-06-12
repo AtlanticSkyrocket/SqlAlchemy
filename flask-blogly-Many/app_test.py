@@ -64,7 +64,6 @@ class BloglyTestCase(unittest.TestCase):
       with app.test_client() as client:
         response = client.post(
             f'/users/{user.id}/delete', follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        
+        self.assertEqual(response.status_code, 200)        
         deleted_user = User.query.get(user.id)
         self.assertIsNone(deleted_user)

@@ -8,6 +8,9 @@ Post
 <div class="container my-4">
   <h2>{{post.title}}</h2>
   <p>{{post.content}}</p>
+  <span>
+    <i>By <a href="/users/{{ post.user.id }}">{{ post.user.full_name }}</a> on {{post.formatted_date}}</i>
+  </span>
   <div class="col-6">
     {% if post.tags %}
     <div class="row">

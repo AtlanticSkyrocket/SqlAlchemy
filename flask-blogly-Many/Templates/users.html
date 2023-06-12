@@ -12,7 +12,7 @@ Users
     {% if users %}
     <ul class="list">
         {% for user in users %}
-        <li><a class="list-item" href="/users/{{ user.id }}">{{ user.first_name ~ ' ' ~ user.last_name  }}</a></li>
+        <li><a class="list-item" href="/users/{{ user.id }}">{{ user.full_name }}</a></li>
         {% endfor %}
     </ul>
     {% else %}
